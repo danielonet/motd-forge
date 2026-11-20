@@ -1,0 +1,8 @@
+# Chosen automatically when any alert is active.
+name = "alert"
+color = "red"
+template = """
+ !! {hostname} NEEDS ATTENTION !!
+{alert_lines}
+{alert_hint}
+"""

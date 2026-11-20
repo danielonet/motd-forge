@@ -1,0 +1,2 @@
+name = "minimal"
+template = "{hostname} · up {uptime} · load {load1} · mem {mem_bar} · {updates_short}"

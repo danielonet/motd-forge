@@ -1,0 +1,13 @@
+# Seasonal theme, enabled automatically 12-01..12-31 (see config.toml).
+name = "frost"
+color = "white"
+template = """
+        *            .  *       .
+   .        *   .        *
+          ,    {hostname}       *
+         /_\\   "Season's greetings,
+        /_*_\\   all systems nominal."
+       /_*_*_\\
+      /_*_*_*_\\   uptime  {uptime}
+         |||      updates {updates}
+"""
