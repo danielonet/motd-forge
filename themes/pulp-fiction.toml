@@ -1,0 +1,12 @@
+name = "pulp-fiction"
+group = "movies"
+color = "yellow"
+template = '''
+        ╔═════════════╗
+        ║ ░░░░░░░░░░░ ║    BUTCH'S BRIEFCASE // {hostname}
+        ║ ░░ ✦✦✦✦✦ ░░ ║    "What's in the box?"
+        ║ ░░░░░░░░░░░ ║    uptime : {uptime}
+        ╚══╤═══════╤══╝    load   : {load1}
+           └──┬─┬──┘       mem    : {mem_bar}
+    Zed's not dead. {updates}
+'''

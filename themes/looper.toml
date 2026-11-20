@@ -1,0 +1,11 @@
+name = "looper"
+group = "movies"
+color = "magenta"
+template = '''
+   2044 ──────●──────▶ 2074
+        ╲   ⟳ LOOP ⟳   ╱
+         ╲___________╱         {hostname}
+    ▓▓ blunderbuss ready ▓▓    uptime : {uptime}
+                               load   : {load1}
+                               mem    : {mem_bar}
+'''

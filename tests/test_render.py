@@ -49,7 +49,7 @@ def test_bar():
 
 
 def test_movies_group():
-    assert set(render.themes_in_group("movies")) == {"die-hard", "terminator", "matrix", "startrek"}
+    assert set(render.themes_in_group("movies")) == {"die-hard", "terminator", "matrix", "startrek", "fifth-element", "12-monkeys", "pulp-fiction", "armageddon", "sixth-sense", "unbreakable", "looper"}
 
 
 def test_theme_group_rotation():

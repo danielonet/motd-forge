@@ -1,0 +1,12 @@
+name = "armageddon"
+group = "movies"
+color = "red"
+template = '''
+        .  ✦   *    ☄  .      NASA // {hostname}
+    *     ,-""""-.      .     T-minus : {uptime}
+   .     /  ░▒▓   \   *       load    : {load1}
+     ✦  |  ▓▒░ ░▒ |     .    mem     : {mem_bar}
+        \  ▒▓░    /           {updates}
+    .    `-....-'    ✦
+  Drill team standing by. Save the planet.
+'''

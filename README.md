@@ -33,4 +33,4 @@ Optional `color` (red, green, yellow, blue, magenta, cyan, white).
 
 Themes may set `group = "name"`. Set `theme_group = "movies"` in config to rotate
 daily through that group (alerts and seasonal themes still take priority).
-The `movies` group: `die-hard`, `terminator`, `matrix`, `startrek`.
+The `movies` group: `die-hard`, `terminator`, `matrix`, `startrek`, plus more Bruce Willis films: `fifth-element`, `12-monkeys`, `pulp-fiction`, `armageddon`, `sixth-sense`, `unbreakable`, `looper`.

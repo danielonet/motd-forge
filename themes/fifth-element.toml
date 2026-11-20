@@ -1,0 +1,12 @@
+name = "fifth-element"
+group = "movies"
+color = "yellow"
+template = '''
+        ◢■■■■■◣
+     ◢■■ ▲ ◆ ● ■■◣       THE FIFTH ELEMENT
+      ◥■ EARTH WIND ■◤    cab / host : {hostname}
+        ◥■■ FIRE ■■◤      uptime     : {uptime}
+          ◥■ WATER ■◤     load       : {load1}
+            ◥■■■◤         memory     : {mem_bar}
+  Multipass accepted. {updates}
+'''

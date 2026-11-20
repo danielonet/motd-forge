@@ -1,0 +1,12 @@
+name = "sixth-sense"
+group = "movies"
+color = "blue"
+template = '''
+     ┌───┐  ┌───┐
+     │ ◌ │  │ ◌ │      I see uptime people.
+     └─┬─┘  └─┬─┘      host   : {hostname}
+       │  ▁▁  │        uptime : {uptime}
+       └──────┘        load   : {load1}
+    ░░ cold spot ░░    mem    : {mem_bar}
+  They only see what they want to see. {updates}
+'''
