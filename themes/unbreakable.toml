@@ -1,0 +1,12 @@
+name = "unbreakable"
+group = "movies"
+color = "green"
+template = '''
+        ▐█▌
+       ▄███▄          UNBREAKABLE // {hostname}
+      ███████         uptime : {uptime}
+      ▀█████▀         load   : {load1}
+       ▐███▌          mem    : {mem_bar}
+       ▐█ █▌          {updates}
+  Rain poncho on. Never sick a day.
+'''

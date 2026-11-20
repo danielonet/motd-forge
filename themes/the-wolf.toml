@@ -1,0 +1,12 @@
+name = "the-wolf"
+group = "pulp"
+color = "white"
+template = '''
+      ▄▄▄▄▄▄▄
+     █ ▀ ▄ ▀ █     WINSTON WOLF — I solve problems.
+     █  ▀▀▀  █     client  : {hostname}
+      ▀█▄▄▄█▀      uptime  : {uptime}
+     ╱▌▓▓▓▓▓▐╲     load    : {load1}
+    ╱ ▌▓▓▓▓▓▐ ╲    mem     : {mem_bar}
+   Thirty minutes away. {updates}
+'''

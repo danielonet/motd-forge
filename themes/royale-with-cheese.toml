@@ -1,0 +1,13 @@
+name = "royale-with-cheese"
+group = "pulp"
+color = "red"
+template = '''
+   ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ┃  LE ROYALE AVEC FROMAGE
+   ┃  ───────────────────────
+   ┃  {hostname}
+   ┃  up {uptime} · load {load1}
+   ┃  {mem_bar}
+   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     They call it a Royale with Cheese.
+'''

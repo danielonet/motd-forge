@@ -1,0 +1,12 @@
+name = "startrek"
+group = ["movies", "startrek"]
+color = "cyan"
+template = '''
+              _.-=====-._
+      ___.--''   _____   ``--.___        USS {hostname}
+     '--.___.---'     '---.___.--'        stardate {uptime}
+          ||  ╲_________╱  ||             warp core : {load1}
+          ||   ═════════   ||             shields   : {mem_bar}
+        ══╧══             ══╧══           {updates}
+  Space: the final frontier. Live long and prosper.
+'''

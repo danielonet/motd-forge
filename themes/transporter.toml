@@ -1,0 +1,11 @@
+name = "transporter"
+group = ["movies", "startrek"]
+color = "cyan"
+template = '''
+      ✦ ·  ✧  ·  ✦          TRANSPORTER ROOM 3
+       ·  ✧ ✦ ✧  ·          destination : {hostname}
+      ✧  ▒▒▒▒▒▒▒▒  ✧        beamed in   : {uptime} ago
+         ▒▒▒▒▒▒▒▒           load        : {load1}
+      ══╧╧╧╧╧╧╧╧╧╧══        memory      : {mem_bar}
+  Energize. {updates}
+'''

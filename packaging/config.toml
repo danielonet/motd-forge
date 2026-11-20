@@ -1,5 +1,6 @@
 # /etc/motd-forge/config.toml
 theme = "fortress"
+# theme_group = "movies"   # rotate daily through all themes of a group
 color = true
 disks = ["/"]
 disk_alert_percent = 90

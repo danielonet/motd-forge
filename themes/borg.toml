@@ -1,0 +1,12 @@
+name = "borg"
+group = ["movies", "startrek"]
+color = "green"
+template = '''
+     ┌─┬─┬─┬─┬─┬─┐
+     ├─┼─┼─┼─┼─┼─┤      WE ARE THE BORG
+     ├─┼─┼─┼─┼─┼─┤      designation : {hostname_upper}
+     ├─┼─┼─┼─┼─┼─┤      uptime      : {uptime}
+     ├─┼─┼─┼─┼─┼─┤      load        : {load1}
+     └─┴─┴─┴─┴─┴─┘      memory      : {mem_bar}
+  Resistance is futile. {updates}
+'''

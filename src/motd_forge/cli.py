@@ -42,7 +42,10 @@ def main(argv: list[str] | None = None) -> int:
         if args.cmd == "refresh":
             print(f"wrote {cache.write(modules.slow(cfg))}")
         elif args.cmd == "themes":
-            print("\n".join(render.list_themes()))
+            for n in render.list_themes():
+                g = render.load_theme(n).get("group")
+                g = ", ".join([g] if isinstance(g, str) else g or [])
+                print(f"{n}  [{g}]" if g else n)
         elif args.cmd == "preview":
             print(_show(cfg, args.theme, args.demo, False if args.no_color else True))
         else:

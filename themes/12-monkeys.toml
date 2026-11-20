@@ -1,0 +1,11 @@
+name = "12-monkeys"
+group = "movies"
+color = "white"
+template = '''
+   ┌─────────────────────────┐
+   │  ARMY OF THE 12 MONKEYS │   TIME TRAVEL LOG
+   │   ◔_◔   ◔_◔   ◔_◔      │   subject : {hostname}
+   │  ⟲ 1996 ⟶ ??? ⟲         │   elapsed : {uptime}
+   └─────────────────────────┘   load    : {load1}
+      the future is history      mem     : {mem_bar}
+'''

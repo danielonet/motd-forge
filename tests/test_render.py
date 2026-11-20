@@ -46,3 +46,25 @@ def test_box_width_constant():
 
 def test_bar():
     assert modules.bar(50) == "█████░░░░░ 50%"
+
+
+def test_movies_group():
+    assert set(render.themes_in_group("movies")) == {"die-hard", "terminator", "matrix", "startrek", "fifth-element", "12-monkeys", "pulp-fiction", "armageddon", "sixth-sense", "unbreakable", "looper",
+        "borg", "klingon", "vulcan", "khan", "transporter", "ds9"}
+
+
+def test_theme_group_rotation():
+    cfg = {**config.DEFAULTS, "theme_group": "movies"}
+    a = render.pick_theme(cfg, [], dt.date(2026, 6, 1))
+    b = render.pick_theme(cfg, [], dt.date(2026, 6, 2))
+    assert a in render.themes_in_group("movies") and a != b
+
+
+def test_pulp_group():
+    assert set(render.themes_in_group("pulp")) == {
+        "pulp-fiction", "jack-rabbit-slims", "the-wolf", "big-kahuna", "royale-with-cheese"}
+
+
+def test_startrek_group():
+    assert set(render.themes_in_group("startrek")) == {
+        "startrek", "borg", "klingon", "vulcan", "khan", "transporter", "ds9"}
