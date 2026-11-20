@@ -20,6 +20,10 @@ flat apt repository to the `gh-pages` branch (served by GitHub Pages).
 
 ## Installing from the repository
 
+One line: `curl -fsSL https://danielonet.github.io/motd-forge/install.sh | sudo sh`
+(the script is published from `scripts/install.sh`; `MOTD_FORGE_DRY_RUN=1` prints the steps only).
+Or by hand:
+
 ```
 curl -fsSL https://danielonet.github.io/motd-forge/motd-forge.gpg | sudo tee /usr/share/keyrings/motd-forge.gpg >/dev/null
 echo "deb [signed-by=/usr/share/keyrings/motd-forge.gpg] https://danielonet.github.io/motd-forge ./" | sudo tee /etc/apt/sources.list.d/motd-forge.list
@@ -32,3 +36,6 @@ Later releases arrive through `apt upgrade`. Older versions stay in the reposito
 
 - Built on Debian 13; the package needs Python 3.11 or newer.
 - Local test of the script: `scripts/build-apt-repo.sh SITE_DIR DEB_DIR` with a throwaway GPG key.
+- Each release also carries a stable-name copy, `motd-forge_all.deb`, so
+  `https://github.com/danielonet/motd-forge/releases/latest/download/motd-forge_all.deb` always
+  works. The apt repository only gets the versioned file.
