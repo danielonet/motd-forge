@@ -122,6 +122,16 @@ Placeholders: `hostname` `hostname_upper` `os` `kernel` `uptime` `load` `load1` 
 
 ## Install and develop
 
+From the apt repository (published on each release, see `docs/apt-repo.md`):
+
+```
+curl -fsSL https://danielonet.github.io/motd-forge/motd-forge.gpg | sudo tee /usr/share/keyrings/motd-forge.gpg >/dev/null
+echo "deb [signed-by=/usr/share/keyrings/motd-forge.gpg] https://danielonet.github.io/motd-forge ./" | sudo tee /etc/apt/sources.list.d/motd-forge.list
+sudo apt update && sudo apt install motd-forge
+```
+
+From source:
+
 ```
 dpkg-buildpackage -us -uc -b         # build the .deb
 sudo apt install ../motd-forge_*.deb
