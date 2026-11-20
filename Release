@@ -1,0 +1,10 @@
+Origin: motd-forge
+Label: motd-forge
+Suite: stable
+Codename: stable
+Architectures: all
+Date: Fri, 20 Nov 2026 22:22:22 +0000
+Description: motd-forge apt repository
+SHA256:
+ d6b443fae7b116dcee336eb84cb23b058e8142b4de321641e0696a8f2afbf804 639 Packages
+ 11d3105e74acf88e2b49a73ea2b552ca296857f6f537e7aab2b310360f80db78 469 Packages.gz

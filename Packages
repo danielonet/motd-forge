@@ -1,0 +1,18 @@
+Package: motd-forge
+Version: 0.1.0-1
+Architecture: all
+Maintainer: motd-forge maintainers <noreply@example.com>
+Installed-Size: 88
+Depends: python3:any, python3 (>= 3.11)
+Recommends: libpam-modules
+Filename: ./motd-forge_0.1.0-1_all.deb
+Size: 15524
+MD5sum: d305e4836b80db05a70b43f66bf08584
+SHA1: d99691a024a64f13abdcd5a07424a41253011018
+SHA256: 3fd796d7d7f0ec354b296b18d38e87538279d7cd1d8777717368ea8d5147ca83
+Section: admin
+Priority: optional
+Description: themed, data-driven message of the day
+ Builds the login banner from /etc/update-motd.d with swappable themes,
+ alert mode and cached slow modules (updates, failed units, weather).
+

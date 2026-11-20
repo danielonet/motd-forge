@@ -1,0 +1,10 @@
+<!doctype html><meta charset="utf-8"><title>motd-forge apt repository</title>
+<h1>motd-forge apt repository</h1>
+<p>One line:</p>
+<pre>curl -fsSL https://danielonet.github.io/motd-forge/install.sh | sudo sh</pre>
+<p>Or by hand:</p>
+<pre>
+curl -fsSL https://danielonet.github.io/motd-forge/motd-forge.gpg | sudo tee /usr/share/keyrings/motd-forge.gpg >/dev/null
+echo "deb [signed-by=/usr/share/keyrings/motd-forge.gpg] https://danielonet.github.io/motd-forge ./" | sudo tee /etc/apt/sources.list.d/motd-forge.list
+sudo apt update &amp;&amp; sudo apt install motd-forge
+</pre>
