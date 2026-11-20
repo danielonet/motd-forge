@@ -27,7 +27,8 @@ def themes_in_group(group: str) -> list[str]:
     found = []
     for name in list_themes():
         try:
-            if load_theme(name).get("group") == group:
+            g = load_theme(name).get("group", [])
+            if group in ([g] if isinstance(g, str) else g):
                 found.append(name)
         except (OSError, ValueError):
             continue

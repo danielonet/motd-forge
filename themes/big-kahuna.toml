@@ -1,0 +1,12 @@
+name = "big-kahuna"
+group = "pulp"
+color = "yellow"
+template = '''
+      ▄▄▄▄▄▄▄▄▄▄
+    ▄█▀▀▀▀▀▀▀▀▀▀█▄        BIG KAHUNA BURGER
+    ▀████████████▀        branch : {hostname}
+    ▄▄▄▄▄▄▄▄▄▄▄▄▄▄        uptime : {uptime}
+    ▀█▄▄▄▄▄▄▄▄▄▄█▀        load   : {load1}
+                          mem    : {mem_bar}
+  Tasty burger. {updates}
+'''

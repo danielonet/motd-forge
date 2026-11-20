@@ -1,0 +1,14 @@
+name = "jack-rabbit-slims"
+group = "pulp"
+color = "magenta"
+template = '''
+   ╔═══════════════════════════════╗
+   ║  ★ JACK RABBIT SLIM'S ★       ║
+   ║  Where the staff is dead      ║
+   ║  and the uptime is not.       ║
+   ╚═══════════════════════════════╝
+     ◖██◗  $5 shake  ◖██◗   host   : {hostname}
+     ◖██◗  twist     ◖██◗   uptime : {uptime}
+                            load   : {load1}
+                            mem    : {mem_bar}
+'''

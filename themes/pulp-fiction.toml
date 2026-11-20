@@ -1,5 +1,5 @@
 name = "pulp-fiction"
-group = "movies"
+group = ["movies", "pulp"]
 color = "yellow"
 template = '''
         ╔═════════════╗

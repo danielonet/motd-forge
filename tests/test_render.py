@@ -57,3 +57,8 @@ def test_theme_group_rotation():
     a = render.pick_theme(cfg, [], dt.date(2026, 6, 1))
     b = render.pick_theme(cfg, [], dt.date(2026, 6, 2))
     assert a in render.themes_in_group("movies") and a != b
+
+
+def test_pulp_group():
+    assert set(render.themes_in_group("pulp")) == {
+        "pulp-fiction", "jack-rabbit-slims", "the-wolf", "big-kahuna", "royale-with-cheese"}
