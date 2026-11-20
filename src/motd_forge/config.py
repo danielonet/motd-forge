@@ -7,6 +7,7 @@ from pathlib import Path
 
 DEFAULTS: dict = {
     "theme": "fortress",
+    "theme_group": "",  # e.g. "movies": rotate daily through that group
     "color": True,
     "alert_theme": "alert",
     "disks": ["/"],

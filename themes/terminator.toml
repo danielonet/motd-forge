@@ -1,0 +1,13 @@
+name = "terminator"
+group = "movies"
+color = "red"
+template = '''
+      ▄▄▄▄▄▄▄▄▄
+    ▄█▀▀▀▀▀▀▀▀▀█▄
+   ██  ▄█████▄   ██     T-800 // {hostname_upper}
+   ██ ██  ●  ██  ██     CYBERDYNE SYSTEMS MODEL 101
+   ██  ▀█████▀   ██     uptime : {uptime}
+    ▀█▄ ▐▌▐▌▐▌ ▄█▀      load   : {load1}
+      ▀▀▀▀▀▀▀▀▀         mem    : {mem_bar}
+  I'll be back... after the next reboot.
+'''

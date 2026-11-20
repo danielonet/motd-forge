@@ -1,0 +1,14 @@
+name = "die-hard"
+group = "movies"
+color = "yellow"
+template = '''
+     ┌──────────────┐
+     │ ▒▒ ▒▒ ▒▒ ▒▒  │   NAKATOMI PLAZA // {hostname}
+     │ ▒▒ ░░ ▒▒ ▒▒  │   status : {uptime} and still standing
+     │ ▒▒ ▒▒ ▒▒ ░░  │   load   : {load1}
+     │ ░░ ▒▒ ▒▒ ▒▒  │   memory : {mem_bar}
+     │ ▒▒ ▒▒ ░░ ▒▒  │   {updates}
+     └──────┬───────┘
+ ▁▂▃▄▅▆▇█▇▆▅▄▃▂▁▁▂▃▄▅▆
+   Now I have a shell. Ho-ho-ho.
+'''

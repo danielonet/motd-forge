@@ -28,3 +28,9 @@ TOML. Either a free `template` (Python `str.format` placeholders such as `{hostn
 `{uptime}`, `{mem_bar}`, `{updates}`; lines whose placeholders are all empty are dropped),
 or a boxed layout via `title = [left, right]` and `rows = [[label, value-template], ...]`.
 Optional `color` (red, green, yellow, blue, magenta, cyan, white).
+
+## Theme groups
+
+Themes may set `group = "name"`. Set `theme_group = "movies"` in config to rotate
+daily through that group (alerts and seasonal themes still take priority).
+The `movies` group: `die-hard`, `terminator`, `matrix`, `startrek`.

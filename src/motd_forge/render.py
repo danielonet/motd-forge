@@ -23,6 +23,17 @@ def list_themes() -> list[str]:
     return sorted(names)
 
 
+def themes_in_group(group: str) -> list[str]:
+    found = []
+    for name in list_themes():
+        try:
+            if load_theme(name).get("group") == group:
+                found.append(name)
+        except (OSError, ValueError):
+            continue
+    return found
+
+
 def load_theme(name: str) -> dict:
     for d in theme_dirs():
         p = d / f"{name}.toml"
@@ -86,6 +97,11 @@ def pick_theme(cfg: dict, alerts: list, today: dt.date | None = None, override: 
         inside = (a <= md <= b) if a <= b else (md >= a or md <= b)  # may wrap the year end
         if inside:
             return rule["theme"]
+    group = cfg.get("theme_group")
+    if group:
+        members = themes_in_group(group)
+        if members:  # rotate daily
+            return members[today.toordinal() % len(members)]
     return cfg["theme"]
 
 

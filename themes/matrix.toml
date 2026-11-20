@@ -1,0 +1,18 @@
+name = "matrix"
+group = "movies"
+color = "green"
+template = '''
+ 1 0 1 1 0 0 1 0 1 1 0 1 0 0 1 1 0 1
+ 0 1 0 0 1 1 0 1 0 0 1 0 1 1 0 0 1 0
+ 1 1 0 1 0 1 1 0 0 1 1 0 1 0 0 1 0 1
+
+ Wake up, {hostname}...
+ The Matrix has you.
+ Follow the white rabbit.
+
+ > uptime  {uptime}
+ > load    {load1}
+ > memory  {mem_bar}
+ > patches {updates}
+ > trace   {failed_ssh}
+'''

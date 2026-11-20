@@ -46,3 +46,14 @@ def test_box_width_constant():
 
 def test_bar():
     assert modules.bar(50) == "█████░░░░░ 50%"
+
+
+def test_movies_group():
+    assert set(render.themes_in_group("movies")) == {"die-hard", "terminator", "matrix", "startrek"}
+
+
+def test_theme_group_rotation():
+    cfg = {**config.DEFAULTS, "theme_group": "movies"}
+    a = render.pick_theme(cfg, [], dt.date(2026, 6, 1))
+    b = render.pick_theme(cfg, [], dt.date(2026, 6, 2))
+    assert a in render.themes_in_group("movies") and a != b
