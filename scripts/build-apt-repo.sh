@@ -5,15 +5,18 @@
 #
 # Copies *.deb from DEB_DIR into SITE_DIR (older versions already there are kept),
 # regenerates Packages/Release, signs with the default secret key in the current
-# GPG home, and writes the public key as motd-forge.gpg (binary) and motd-forge.asc.
+# GPG home, and writes the public key as motd-forge.gpg (binary) and motd-forge.asc, and
+# publishes scripts/install.sh as install.sh.
 # Set GPG_PASSPHRASE if the key has one. Needs: dpkg-dev, gpg, gzip, sha256sum.
 set -eu
 
 site=${1:?usage: build-apt-repo.sh SITE_DIR DEB_DIR}
 debs=${2:?usage: build-apt-repo.sh SITE_DIR DEB_DIR}
 
+here=$(cd "$(dirname "$0")" && pwd)
 mkdir -p "$site"
 cp "$debs"/*.deb "$site"/
+cp "$here/install.sh" "$site"/install.sh
 cd "$site"
 
 dpkg-scanpackages --multiversion . /dev/null > Packages 2>/dev/null
@@ -56,6 +59,9 @@ touch .nojekyll
 cat > index.html <<'HTML'
 <!doctype html><meta charset="utf-8"><title>motd-forge apt repository</title>
 <h1>motd-forge apt repository</h1>
+<p>One line:</p>
+<pre>curl -fsSL https://danielonet.github.io/motd-forge/install.sh | sudo sh</pre>
+<p>Or by hand:</p>
 <pre>
 curl -fsSL https://danielonet.github.io/motd-forge/motd-forge.gpg | sudo tee /usr/share/keyrings/motd-forge.gpg >/dev/null
 echo "deb [signed-by=/usr/share/keyrings/motd-forge.gpg] https://danielonet.github.io/motd-forge ./" | sudo tee /etc/apt/sources.list.d/motd-forge.list

@@ -25,9 +25,14 @@ jobs:
       - run: mkdir out && cp ../*.deb out/
       - uses: actions/upload-artifact@v4
         with: { name: deb, path: out/*.deb }
+      - name: Add a stable-name copy for releases/latest/download/motd-forge_all.deb
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          mkdir release && cp out/*.deb release/
+          cp out/*.deb release/motd-forge_all.deb
       - if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
-        with: { files: out/*.deb }
+        with: { files: release/*.deb }
   apt-repo:
     # Publishes a signed apt repository to the gh-pages branch on every v* tag.
     needs: deb
