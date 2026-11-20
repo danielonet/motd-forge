@@ -7,6 +7,31 @@ on:
 permissions:
   contents: write
 jobs:
+  version:
+    # Decides whether this run publishes a release. A release is published when
+    #  - a v* tag is pushed, or
+    #  - a push to main finds no GitHub release for the version in pyproject.toml.
+    # So releasing = bump the version (pyproject.toml + debian/changelog) and merge.
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      release: ${{ steps.v.outputs.release }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: v
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ver=$(sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml | head -n1)
+          release=false
+          if [ "$GITHUB_REF_TYPE" = tag ]; then
+            ver=${GITHUB_REF_NAME#v}; release=true
+          elif [ "$GITHUB_EVENT_NAME" = push ] && [ "$GITHUB_REF" = refs/heads/main ]; then
+            gh release view "v$ver" >/dev/null 2>&1 || release=true
+          fi
+          echo "version=$ver" >> "$GITHUB_OUTPUT"
+          echo "release=$release" >> "$GITHUB_OUTPUT"
+          echo "version $ver, release=$release"
   test:
     runs-on: ubuntu-latest
     steps:
@@ -15,7 +40,7 @@ jobs:
         with: { python-version: "3.12" }
       - run: pip install pytest && pip install -e . && pytest
   deb:
-    needs: test
+    needs: [test, version]
     runs-on: ubuntu-latest
     container: debian:trixie
     steps:
@@ -26,36 +51,50 @@ jobs:
       - uses: actions/upload-artifact@v4
         with: { name: deb, path: out/*.deb }
       - name: Add a stable-name copy for releases/latest/download/motd-forge_all.deb
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: needs.version.outputs.release == 'true'
         run: |
           mkdir release && cp out/*.deb release/
           cp out/*.deb release/motd-forge_all.deb
-      - if: startsWith(github.ref, 'refs/tags/v')
+      - if: needs.version.outputs.release == 'true'
         uses: softprops/action-gh-release@v2
-        with: { files: release/*.deb }
+        with:
+          tag_name: v${{ needs.version.outputs.version }}
+          target_commitish: ${{ github.sha }}
+          generate_release_notes: true
+          files: release/*.deb
   apt-repo:
-    # Publishes a signed apt repository to the gh-pages branch on every v* tag.
-    needs: deb
-    if: startsWith(github.ref, 'refs/tags/v')
+    # Publishes a signed apt repository to the gh-pages branch for each release.
+    needs: [version, deb]
+    if: needs.version.outputs.release == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - name: Check signing key
+        id: k
+        env:
+          KEY: ${{ secrets.APT_GPG_PRIVATE_KEY }}
+        run: |
+          if [ -n "$KEY" ]; then echo "has_key=true" >> "$GITHUB_OUTPUT"
+          else echo "::warning::APT_GPG_PRIVATE_KEY is not set, skipping apt repository (see docs/apt-repo.md)"; fi
+      - if: steps.k.outputs.has_key == 'true'
+        uses: actions/download-artifact@v4
         with: { name: deb, path: debs }
       - name: Fetch existing repository (keeps older versions)
+        if: steps.k.outputs.has_key == 'true'
         run: git clone --depth 1 --branch gh-pages "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" site || mkdir site
       - name: Import signing key
+        if: steps.k.outputs.has_key == 'true'
         env:
           KEY: ${{ secrets.APT_GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.APT_GPG_PASSPHRASE }}
-        run: |
-          test -n "$KEY" || { echo "secret APT_GPG_PRIVATE_KEY is not set (see docs/apt-repo.md)"; exit 1; }
-          printf '%s' "$KEY" | gpg --batch --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --import
+        run: printf '%s' "$KEY" | gpg --batch --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --import
       - name: Build repository
+        if: steps.k.outputs.has_key == 'true'
         env:
           GPG_PASSPHRASE: ${{ secrets.APT_GPG_PASSPHRASE }}
         run: sudo apt-get install -y dpkg-dev >/dev/null && ./scripts/build-apt-repo.sh site debs
       - name: Publish to gh-pages
+        if: steps.k.outputs.has_key == 'true'
         run: |
           cd site
           git init -q 2>/dev/null || true
@@ -63,5 +102,5 @@ jobs:
           git config user.email "github-actions@users.noreply.github.com"
           git checkout -q -B gh-pages
           git add -A
-          git commit -qm "apt repo for ${{ github.ref_name }}" || exit 0
-          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" gh-pages
+          git commit -qm "apt repo for v${{ needs.version.outputs.version }}" || exit 0
+          git push "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" gh-pages

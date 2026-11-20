@@ -1,6 +1,13 @@
 # Publishing the apt repository
 
-Every `v*` tag builds the `.deb`, attaches it to the GitHub release and publishes a signed
+## Releasing
+
+A release is created automatically. Bump `version` in `pyproject.toml` and the top entry of
+`debian/changelog` (e.g. `0.1.1` and `0.1.1-1`) and merge to `main`: if there is no GitHub release
+for that version yet, CI creates the tag `v<version>`, attaches the `.deb`, and updates the apt
+repository. Pushing a `v*` tag by hand works too.
+
+Every release builds the `.deb`, attaches it to the GitHub release and publishes a signed
 flat apt repository to the `gh-pages` branch (served by GitHub Pages).
 
 ## One-time setup
@@ -15,7 +22,7 @@ flat apt repository to the `gh-pages` branch (served by GitHub Pages).
 2. In the repo: Settings, Secrets and variables, Actions, add secret `APT_GPG_PRIVATE_KEY` with the
    contents of `motd-forge-secret.asc` (and optionally `APT_GPG_PASSPHRASE`). Then delete the local
    secret file or keep it in a password manager.
-3. Tag a release (`v0.1.0`). Once the `apt-repo` job has created the `gh-pages` branch, enable
+3. Release (merge to `main` with an unreleased version, or push a `v*` tag). Once the `apt-repo` job has created the `gh-pages` branch, enable
    Settings, Pages, Source: Deploy from a branch, `gh-pages` / root.
 
 ## Installing from the repository
