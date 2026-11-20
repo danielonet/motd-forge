@@ -1,0 +1,23 @@
+# /etc/motd-forge/config.toml
+theme = "fortress"
+color = true
+disks = ["/"]
+disk_alert_percent = 90
+
+[modules]
+updates = true
+failed_units = true
+last_login = true
+failed_ssh = true
+docker = true
+quote = true
+weather = false
+
+[weather]
+location = ""
+
+# Automatic theme by date (MM-DD); ranges may wrap the year end.
+[[seasonal]]
+theme = "frost"
+from = "12-01"
+to = "12-31"

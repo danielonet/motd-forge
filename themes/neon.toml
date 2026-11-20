@@ -1,0 +1,10 @@
+name = "neon"
+color = "magenta"
+template = """
+ ▌▌ {hostname_upper} ▐▐   // NODE ONLINE
+ ░▒▓ UPTIME ▓▒░  {uptime}
+ ░▒▓ LOAD   ▓▒░  {load1}
+ ░▒▓ MEM    ▓▒░  {mem_bar}
+ ░▒▓ ICE    ▓▒░  {failed_ssh}
+ >> authorized access only <<
+"""

@@ -1,0 +1,14 @@
+# Boxed dashboard. Rows with an empty value are skipped.
+name = "fortress"
+width = 38
+color = "cyan"
+title = ["{hostname}", "{os}"]
+rows = [
+  ["uptime", "{uptime}"],
+  ["load", "{load}"],
+  ["memory", "{mem_bar}"],
+  ["disk", "{disk_bar}"],
+  ["updates", "{updates}"],
+  ["last login", "{last_login}"],
+  ["docker", "{docker}"],
+]

@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+export PYBUILD_NAME=motd-forge
+
+%:
+	dh $@ --with python3 --buildsystem=pybuild
+
+override_dh_auto_install:
+	dh_auto_install
+	install -D -m755 packaging/50-motd-forge debian/motd-forge/etc/update-motd.d/50-motd-forge
+	install -D -m644 packaging/config.toml debian/motd-forge/etc/motd-forge/config.toml
+	install -d debian/motd-forge/usr/share/motd-forge/themes
+	install -m644 themes/*.toml debian/motd-forge/usr/share/motd-forge/themes/
+
+override_dh_installsystemd:
+	dh_installsystemd --name=motd-forge-refresh motd-forge-refresh.timer

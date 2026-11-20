@@ -1,0 +1,7 @@
+[Unit]
+Description=Refresh motd-forge cache (slow modules)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/motd-forge refresh
+Nice=10
