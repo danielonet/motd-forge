@@ -1,0 +1,11 @@
+name = "ds9"
+group = ["movies", "startrek"]
+color = "yellow"
+template = '''
+         ╲   │   ╱
+      ╲___╲__│__╱___╱        DEEP SPACE {hostname}
+     ──────(  ◎  )──────     station time : {uptime}
+      ╱‾‾‾╱‾‾│‾‾╲‾‾‾╲        load         : {load1}
+         ╱   │   ╲           mem          : {mem_bar}
+  The Promenade is open. {updates}
+'''

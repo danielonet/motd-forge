@@ -1,0 +1,12 @@
+name = "klingon"
+group = ["movies", "startrek"]
+color = "red"
+template = '''
+        ╱╲      ╱╲
+       ╱  ╲____╱  ╲        IKS {hostname}
+      ╱  ▓▓▓▓▓▓▓▓  ╲       honor  : {uptime}
+     ◄══╣  ◉    ◉  ╠══►    load   : {load1}
+        ╲  ▀▀▀▀▀▀  ╱       mem    : {mem_bar}
+         ╲________╱
+  Today is a good day to deploy. {updates}
+'''

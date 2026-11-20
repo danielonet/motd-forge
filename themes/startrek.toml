@@ -1,5 +1,5 @@
 name = "startrek"
-group = "movies"
+group = ["movies", "startrek"]
 color = "cyan"
 template = '''
               _.-=====-._

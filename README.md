@@ -37,3 +37,6 @@ The `movies` group: `die-hard`, `terminator`, `matrix`, `startrek`, plus more Br
 
 The `pulp` group (`theme_group = "pulp"`): `pulp-fiction`, `jack-rabbit-slims`, `the-wolf`,
 `big-kahuna`, `royale-with-cheese`. `group` may also be a list, e.g. `["movies", "pulp"]`.
+
+The `startrek` group (`theme_group = "startrek"`): `startrek`, `borg`, `klingon`, `vulcan`,
+`khan`, `transporter`, `ds9`. These are also part of `movies`.

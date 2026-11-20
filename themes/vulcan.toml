@@ -1,0 +1,12 @@
+name = "vulcan"
+group = ["movies", "startrek"]
+color = "blue"
+template = '''
+        ▐▌  ▐▌
+        ▐▌▐▌▐▌▐▌        VULCAN SCIENCE ACADEMY
+        ▐█████▌▐▌       logical host : {hostname}
+      ▐▌▐█████▌▐▌       uptime       : {uptime}
+       ▀▜█████▛▀        load         : {load1}
+         ▐████▌         memory       : {mem_bar}
+  Live long and prosper. Fascinating: {updates}
+'''

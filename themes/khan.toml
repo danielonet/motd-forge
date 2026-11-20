@@ -1,0 +1,12 @@
+name = "khan"
+group = ["movies", "startrek"]
+color = "red"
+template = '''
+        ░▒▓█ KHAAAN! █▓▒░
+   ──────────────────────────
+    ◄ Reliant ► {hostname}
+    revenge served at {uptime}
+    load {load1} · {mem_bar}
+   ──────────────────────────
+    From hell's heart I stab at thee. {updates}
+'''
