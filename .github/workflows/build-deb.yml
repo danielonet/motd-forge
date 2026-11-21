@@ -48,6 +48,15 @@ jobs:
       - uses: actions/checkout@v4
       - run: dpkg-buildpackage -us -uc -b
       - run: mkdir out && cp ../*.deb out/
+      - name: Check the package installs on Debian 12 (libc6 >= 2.34 only)
+        run: |
+          deps=$(dpkg-deb -f out/*.deb Depends)
+          echo "Depends: $deps"
+          echo "$deps" | grep -q 'libc6 (>= 2.34)' || { echo "libc6 requirement is not 2.34"; exit 1; }
+          # strong (non-weak) glibc symbols must not need more than 2.34
+          max=$(objdump -T debian/motd-forge/usr/bin/motd-forge | grep GLIBC_ | grep -v ' w ' | grep -o 'GLIBC_[0-9.]*' | sort -Vu | tail -1)
+          echo "highest required glibc symbol: $max"
+          [ "$(printf '%s\nGLIBC_2.34\n' "$max" | sort -V | tail -1)" = GLIBC_2.34 ] || { echo "binary needs newer than glibc 2.34"; exit 1; }
       - uses: actions/upload-artifact@v4
         with: { name: deb, path: out/*.deb }
       - name: Add a stable-name copy for releases/latest/download/motd-forge_<arch>.deb
