@@ -1,3 +1,10 @@
+motd-forge (0.2.1-1) unstable; urgency=medium
+
+  * Fix the libc6 dependency: require glibc 2.34 (Debian 12+) instead of the
+    2.39 that dpkg-shlibdeps derived from two optional symbols.
+
+ -- motd-forge maintainers <noreply@example.com>  Sat, 21 Nov 2026 19:00:00 +0000
+
 motd-forge (0.2.0-1) unstable; urgency=medium
 
   * Rewrite in Rust: a single self-contained binary, no Python, no
