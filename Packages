@@ -36,3 +36,23 @@ Description: themed, data-driven message of the day
  A single self-contained binary with no dependencies beyond libc; all
  themes are built in.
 
+Package: motd-forge
+Version: 0.2.1-1
+Architecture: amd64
+Maintainer: motd-forge maintainers <noreply@example.com>
+Installed-Size: 600
+Depends: libc6 (>= 2.34), libgcc-s1 (>= 4.2)
+Recommends: libpam-modules
+Filename: ./motd-forge_0.2.1-1_amd64.deb
+Size: 242608
+MD5sum: 0f09bcfbcf479312073eb09a68f4ac0d
+SHA1: f712851318a3e34f5ba4ecb531e2f96ae816dca0
+SHA256: 9fea14c6e47e2eff4667139202ff880cabc556192f41472380279d15a7881628
+Section: admin
+Priority: optional
+Description: themed, data-driven message of the day
+ Builds the login banner from /etc/update-motd.d with swappable themes,
+ alert mode and cached slow modules (updates, failed units, weather).
+ A single self-contained binary with no dependencies beyond libc; all
+ themes are built in.
+

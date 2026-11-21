@@ -6,24 +6,24 @@ Label: motd-forge
 Suite: stable
 Codename: stable
 Architectures: all amd64
-Date: Sat, 21 Nov 2026 18:18:15 +0000
+Date: Sat, 21 Nov 2026 18:32:19 +0000
 Description: motd-forge apt repository
 SHA256:
- 0c63e18ddf7e4ab7f40a71c0a59638524614954a8797018d6aa2e3fb93714cce 1381 Packages
- 46e396c90f3d265ad50a9d3c1931bf6076eb3d1132d5aeb7befdaebea41305be 677 Packages.gz
+ 064129b7538c9d765ba01f8b159155bd809b25bda6d3073dbfa883ecf21157c9 2123 Packages
+ fbd19aa4aef79b613bda46bec10dfff936d2a34cc554bb8959cf02ebb21c5bde 788 Packages.gz
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEETPdo1wnbMwdmswZNtRkucDaJkpgFAmsB4GcACgkQtRkucDaJ
-kpjs1Q//XSe5CdIJmiWzcyr8xlEKhgv9XKU27GU7INvdo2PPqBnOooxFbDQM+zpQ
-+gYxZX4qELUj9lTTbNyuvqC6cxABBRx2Vt/TTP7xd/B229ZBNSRuF4PejUABudP/
-3mcKNGqnIg2YD1VBliD3sznHT62uWDbqdvDXEmWS8Fw/Trah8ltxesAG2SL7GBB7
-cbGv5ClOUlurEnNSBt5id3e1vsYdtnm41CLtrSghoydRTTaAaWHP6cgD6E5wSUv7
-YGHpSB/u3ThctWD2nGbci6ZfnZ0xsx3BcfFHMn81i/urnjLGP66unwAW0QETxc1z
-+/ih3LgWWnRTZUuPlta46cqV7atok7jlnOw8WLS/MyqN7dLaqszoMakVii+XrmGe
-jVcLEdCqAQIXoryS0YXz82pE2YO64UDLj5v26UNS5nj0UfeAipbLInvoGI/h/sjr
-rhbUSWi+1px7acf1gfc+kmBZMKQ6haaECbR/vs6Nf8Tikp1ETcFwAG4zMF0X9Qxh
-PKy8pTkxpYFW5J9ltDzc9oX1t1aKVjFS1HWxNrLsjGvwUet0NidD9AbDZlnY0E/o
-yS1XhVmp3G1KHmLLmjiHKCTgCfftSGMphxL8DAcujiWP0BvZTl9GQi727i+nSnRk
-ojzH52k+S8TgzmfduSoR8+jIM4Ob6KTmAdqDd6ONbQEzspFKaZY=
-=xRWU
+iQIzBAEBCgAdFiEETPdo1wnbMwdmswZNtRkucDaJkpgFAmsB47MACgkQtRkucDaJ
+kph9+Q//bt5WrxTksloaAfk86++chg0pwsGO9hdm26zpybKo18qNWGcrgXDtgP0r
+UDSQdJPlXkb1YDO1xSCp7s6MRem4pIpCv18KPbLXGgYuWhtoi8LHV7sCq3MZhYcb
+YZZpTeWbrEzf3QJ9gmma00/IQyR29HiekLoy7e1kPdLI4jsNeMqKwnKA5tZDk2it
+tixk8rsh1b87Jyztoe8x24YbxJLxHK+khNItJTcWXYsjyoG0JlQ1358+oOaTKNgr
+GwJ+uWcTOuyvlxzs8pFNqUWFBSe/3hG4kgIyx7z6UIBFk+toxX6cOpS2hkuwpkyx
+7Y70ly6+c+2+nyhjNBEyc5sNkLj69eeTGOT37+BSThSvnWVbBQiphrnnOOIfdvO6
+XuaISTlBCwWz4a1K/JX6eE2WTfXS1eFeVxII5y2tIRDi5wrPp3mr5ZfW7pwSqR4u
+BGLLDr8F4X+LXHLWbOa2hLfPLsGrOJ7sFzP4Ha7nX1HIKMg8uVOKO2ggAZcstCOg
+ijsUs3o9fVdTheMuF4mrWTVSkpbGe892thr+5/Kd3nl9HOexHbgauFvIs+9Zr+/B
+6kAZTConrD0/DVFJVwo6Sls4hDXxAp/RK7pch0Gl6BCQAMxpjt0WDsc4OGWG4+mc
+KXs2Usr2IPTDLK5a2x6pKG0dNgPJfu4TToDBZHLhKgwNt6ZnFc0=
+=Dh29
 -----END PGP SIGNATURE-----
