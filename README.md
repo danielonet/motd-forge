@@ -14,11 +14,11 @@
 data-driven banner. Written in Rust as one small self-contained binary: no runtime dependencies
 beyond libc, no third-party crates, and the themes are built in.
 
-**Runs on Debian 12 and 13** (any release with glibc 2.34 or newer, amd64 builds are published;
-Debian 11 is too old) and on Ubuntu. How the banner reaches your login:
+**Built for Debian 12 and 13** (any release with glibc 2.34 or newer; amd64 builds are published;
+Debian 11 is too old) and Ubuntu. How the banner reaches your login:
 
 - **Debian:** `/etc/profile.d/motd-forge.sh` prints it at interactive login (SSH or console).
-  Debian's `pam_motd` does not run `/etc/update-motd.d`, so a script there would never show up.
+  Debian's `pam_motd` does not reliably run `/etc/update-motd.d`, so a script there may never show up.
 - **Ubuntu:** `/etc/update-motd.d/50-motd-forge` is run by `pam_motd`; the profile hook notices
   this and stays quiet so the banner is not printed twice.
 - Opt out with `export MOTD_FORGE_DISABLE=1` in your shell profile, or delete the profile.d file.
