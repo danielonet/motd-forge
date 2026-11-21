@@ -3,10 +3,26 @@
 use std::path::PathBuf;
 use std::time::{Duration, SystemTime};
 
+/// A systemd unit in the failed state. `since` is when it failed (unix seconds), if known.
+#[derive(Clone, Debug, PartialEq)]
+pub struct FailedUnit {
+    pub name: String,
+    pub since: Option<i64>,
+}
+
+/// The most recent error-priority entry in the journal.
+#[derive(Clone, Debug, PartialEq)]
+pub struct LastError {
+    pub ts: i64,
+    pub unit: String,
+    pub msg: String,
+}
+
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct Cache {
     pub updates: Option<u32>,
-    pub failed_units: Vec<String>,
+    pub failed_units: Vec<FailedUnit>,
+    pub last_error: Option<LastError>,
     pub last_login: Option<String>,
     pub failed_ssh: Option<u32>,
     pub docker: Option<u32>,
@@ -41,7 +57,15 @@ impl Cache {
         if let Some(n) = self.updates {
             put("updates", n.to_string());
         }
-        put("failed_units", self.failed_units.join(","));
+        for u in &self.failed_units {
+            put(
+                "failed_unit",
+                format!("{}\t{}", u.since.unwrap_or(0), u.name),
+            );
+        }
+        if let Some(e) = &self.last_error {
+            put("last_error", format!("{}\t{}\t{}", e.ts, e.unit, e.msg));
+        }
         if let Some(v) = &self.last_login {
             put("last_login", v.clone());
         }
@@ -65,12 +89,33 @@ impl Cache {
             };
             match k {
                 "updates" => c.updates = v.parse().ok(),
+                // Older cache files: names only, failure time unknown.
                 "failed_units" => {
-                    c.failed_units = v
-                        .split(',')
-                        .filter(|s| !s.is_empty())
-                        .map(String::from)
-                        .collect()
+                    c.failed_units
+                        .extend(v.split(',').filter(|s| !s.is_empty()).map(|n| FailedUnit {
+                            name: n.to_string(),
+                            since: None,
+                        }))
+                }
+                "failed_unit" => {
+                    if let Some((ts, name)) = v.split_once('\t') {
+                        c.failed_units.push(FailedUnit {
+                            name: name.to_string(),
+                            since: ts.parse::<i64>().ok().filter(|t| *t > 0),
+                        });
+                    }
+                }
+                "last_error" => {
+                    let mut it = v.splitn(3, '\t');
+                    if let (Some(ts), Some(unit), Some(msg)) = (it.next(), it.next(), it.next()) {
+                        if let Ok(ts) = ts.parse() {
+                            c.last_error = Some(LastError {
+                                ts,
+                                unit: unit.to_string(),
+                                msg: msg.to_string(),
+                            });
+                        }
+                    }
                 }
                 "last_login" => c.last_login = Some(v.to_string()),
                 "failed_ssh" => c.failed_ssh = v.parse().ok(),
@@ -125,12 +170,33 @@ mod tests {
     fn roundtrip() {
         let c = Cache {
             updates: Some(3),
-            failed_units: vec!["a.service".into(), "b.service".into()],
+            failed_units: vec![
+                FailedUnit {
+                    name: "a.service".into(),
+                    since: Some(1_700_000_000),
+                },
+                FailedUnit {
+                    name: "b.service".into(),
+                    since: None,
+                },
+            ],
+            last_error: Some(LastError {
+                ts: 1_700_000_100,
+                unit: "sshd".into(),
+                msg: "error: something broke".into(),
+            }),
             last_login: Some("from 10.0.0.7".into()),
             failed_ssh: Some(0),
             docker: Some(4),
             weather: None,
         };
         assert_eq!(Cache::parse(&c.serialize()), c);
+    }
+
+    #[test]
+    fn reads_legacy_failed_units_line() {
+        let c = Cache::parse("failed_units=a.service,b.service\n");
+        assert_eq!(c.failed_units.len(), 2);
+        assert_eq!(c.failed_units[0].since, None);
     }
 }

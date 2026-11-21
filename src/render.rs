@@ -143,7 +143,18 @@ fn pad(s: &str, width: usize) -> String {
 }
 
 /// Merge live + cached data into template strings and a list of alerts.
-pub fn build_context(live: &Live, cache: &Cache, cfg: &Config) -> (Ctx, Vec<Alert>) {
+/// An error with a known time only counts while it is recent; unknown times always count.
+fn is_recent(since: Option<i64>, now: i64, max_secs: i64) -> bool {
+    match since {
+        Some(t) if t > 0 => now.saturating_sub(t) <= max_secs,
+        _ => true,
+    }
+}
+
+/// `now` is unix seconds. Failed units and journal errors older than
+/// `alert_max_age_hours` raise no alert, so the banner falls back to the normal theme rotation.
+pub fn build_context(live: &Live, cache: &Cache, cfg: &Config, now: i64) -> (Ctx, Vec<Alert>) {
+    let max_secs = (cfg.alert_max_age_hours * 3600.0) as i64;
     let mut ctx = Ctx::new();
     let mut alerts: Vec<Alert> = Vec::new();
     let mut put = |k: &str, v: String| {
@@ -179,12 +190,34 @@ pub fn build_context(live: &Live, cache: &Cache, cfg: &Config) -> (Ctx, Vec<Aler
             ));
         }
     }
-    for unit in &cache.failed_units {
-        alerts.push((
-            "✖".into(),
-            format!("{}failed", pad(unit, 15)),
-            format!("run: systemctl status {unit}"),
-        ));
+    for u in &cache.failed_units {
+        if is_recent(u.since, now, max_secs) {
+            alerts.push((
+                "✖".into(),
+                format!("{}failed", pad(&u.name, 15)),
+                format!("run: systemctl status {}", u.name),
+            ));
+        }
+    }
+    if let Some(e) = &cache.last_error {
+        if is_recent(Some(e.ts), now, max_secs) {
+            let what = if e.unit.is_empty() {
+                e.msg.clone()
+            } else {
+                format!("{}: {}", e.unit, e.msg)
+            };
+            alerts.push((
+                "✖".into(),
+                format!(
+                    "error {} ago: {what}",
+                    human_duration((now - e.ts).max(0) as f64)
+                ),
+                format!(
+                    "run: journalctl -p err --since -{}h",
+                    cfg.alert_max_age_hours
+                ),
+            ));
+        }
     }
     if live.reboot_required {
         alerts.push(("⚠".into(), "reboot required".into(), String::new()));
@@ -220,7 +253,15 @@ pub fn build_context(live: &Live, cache: &Cache, cfg: &Config) -> (Ctx, Vec<Aler
     if let Some(w) = &cache.weather {
         put("weather", w.clone());
     }
-    put("failed_units", cache.failed_units.join(", "));
+    put(
+        "failed_units",
+        cache
+            .failed_units
+            .iter()
+            .map(|u| u.name.as_str())
+            .collect::<Vec<_>>()
+            .join(", "),
+    );
     put(
         "alert_lines",
         alerts

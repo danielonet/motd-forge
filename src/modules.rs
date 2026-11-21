@@ -3,7 +3,7 @@
 //! `live()` is cheap (reads /proc, statvfs) and runs at login.
 //! `slow()` shells out and may take seconds; it only runs from `motd-forge refresh`
 //! (systemd timer) and its result is cached.
-use crate::cache::Cache;
+use crate::cache::{Cache, FailedUnit, LastError};
 use crate::config::Config;
 use crate::sys;
 use std::io::Read;
@@ -120,6 +120,72 @@ pub fn live(cfg: &Config) -> Live {
     }
 }
 
+fn uptime_secs() -> f64 {
+    read_trim("/proc/uptime")
+        .and_then(|s| s.split_whitespace().next().and_then(|x| x.parse().ok()))
+        .unwrap_or(0.0)
+}
+
+/// When a unit entered its current (failed) state, as unix seconds; None if unknown.
+fn unit_failed_at(name: &str, boot: i64) -> Option<i64> {
+    let out = run(
+        "systemctl",
+        &[
+            "show",
+            "-p",
+            "StateChangeTimestampMonotonic",
+            "--value",
+            name,
+        ],
+        Duration::from_secs(5),
+    )?;
+    let micros: i64 = out.trim().parse().ok()?;
+    (micros > 0).then(|| boot + micros / 1_000_000)
+}
+
+/// Make untrusted log text safe to print on a terminal: control characters
+/// (including ESC) become spaces, and the length is capped.
+pub fn sanitize(s: &str, max_chars: usize) -> String {
+    let cleaned: String = s
+        .chars()
+        .map(|c| if c.is_control() { ' ' } else { c })
+        .collect();
+    let cleaned = cleaned.split_whitespace().collect::<Vec<_>>().join(" ");
+    if cleaned.chars().count() > max_chars {
+        let cut: String = cleaned.chars().take(max_chars.saturating_sub(1)).collect();
+        format!("{cut}…")
+    } else {
+        cleaned
+    }
+}
+
+/// Newest usable entry from `journalctl -o short-unix -r` output
+/// (lines look like `1763750000.123456 host unit[pid]: message`).
+pub fn parse_last_error(out: &str, ignore: &[String]) -> Option<LastError> {
+    for line in out.lines() {
+        let mut it = line.splitn(3, ' ');
+        let Some(ts) = it.next().and_then(|t| t.parse::<f64>().ok()) else {
+            continue; // e.g. "-- No entries --"
+        };
+        let _host = it.next();
+        let rest = it.next().unwrap_or("");
+        if ignore
+            .iter()
+            .any(|p| !p.is_empty() && line.contains(p.as_str()))
+        {
+            continue;
+        }
+        let (unit, msg) = rest.split_once(": ").unwrap_or(("", rest));
+        let unit = unit.split('[').next().unwrap_or(unit);
+        return Some(LastError {
+            ts: ts as i64,
+            unit: sanitize(unit, 30),
+            msg: sanitize(msg, 80),
+        });
+    }
+    None
+}
+
 /// Run a command with a timeout; None if it is missing, fails, or times out.
 fn run(cmd: &str, args: &[&str], timeout: Duration) -> Option<String> {
     let mut child = Command::new(cmd)
@@ -169,12 +235,39 @@ pub fn slow(cfg: &Config) -> Cache {
             &["--failed", "--no-legend", "--plain"],
             secs(20),
         ) {
+            let now = sys::now_secs();
+            let boot = now - uptime_secs() as i64;
             c.failed_units = s
                 .lines()
                 .filter_map(|l| l.split_whitespace().next())
-                .map(String::from)
+                .map(|name| FailedUnit {
+                    name: name.to_string(),
+                    since: unit_failed_at(name, boot),
+                })
                 .collect();
         }
+    }
+    if cfg.module("log_errors") {
+        let mins = (cfg.alert_max_age_hours * 60.0).ceil().max(1.0) as u64;
+        let since = format!("-{mins}min");
+        c.last_error = run(
+            "journalctl",
+            &[
+                "-p",
+                "err",
+                "--since",
+                &since,
+                "--no-pager",
+                "-q",
+                "-o",
+                "short-unix",
+                "-r",
+                "-n",
+                "200",
+            ],
+            secs(20),
+        )
+        .and_then(|s| parse_last_error(&s, &cfg.log_error_ignore));
     }
     if cfg.module("last_login") {
         c.last_login = run("last", &["-n", "2", "-F", "-w"], secs(20)).and_then(|s| {
@@ -216,7 +309,7 @@ pub fn slow(cfg: &Config) -> Cache {
 }
 
 /// Fake data for `preview --demo`.
-pub fn demo() -> (Live, Cache) {
+pub fn demo(now: i64) -> (Live, Cache) {
     let live = Live {
         hostname: "web-prod-01".into(),
         os: "Debian 13".into(),
@@ -230,7 +323,15 @@ pub fn demo() -> (Live, Cache) {
     };
     let cache = Cache {
         updates: Some(3),
-        failed_units: vec!["nginx.service".into()],
+        failed_units: vec![FailedUnit {
+            name: "nginx.service".into(),
+            since: Some(now - 5 * 3600),
+        }],
+        last_error: Some(LastError {
+            ts: now - 3 * 3600,
+            unit: "sshd".into(),
+            msg: "error: maximum authentication attempts exceeded".into(),
+        }),
         last_login: Some("from 10.0.0.7".into()),
         failed_ssh: Some(0),
         docker: Some(4),

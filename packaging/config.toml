@@ -4,10 +4,15 @@ theme = "fortress"
 color = true
 disks = ["/"]
 disk_alert_percent = 90
+# Journal errors and failed units older than this many hours no longer raise an alert.
+alert_max_age_hours = 48
+# Journal entries containing any of these strings are not treated as errors.
+log_error_ignore = []
 
 [modules]
 updates = true
 failed_units = true
+log_errors = true
 last_login = true
 failed_ssh = true
 docker = true

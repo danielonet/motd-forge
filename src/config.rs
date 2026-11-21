@@ -17,6 +17,10 @@ pub struct Config {
     pub alert_theme: String,
     pub disks: Vec<String>,
     pub disk_alert_percent: f64,
+    /// Journal errors and failed units older than this many hours no longer raise an alert.
+    pub alert_max_age_hours: f64,
+    /// Journal entries containing any of these substrings are not treated as errors.
+    pub log_error_ignore: Vec<String>,
     pub cache_max_age: u64,
     pub modules: BTreeMap<String, bool>,
     pub weather_location: String,
@@ -30,6 +34,7 @@ impl Default for Config {
         let modules = [
             ("updates", true),
             ("failed_units", true),
+            ("log_errors", true),
             ("last_login", true),
             ("failed_ssh", true),
             ("docker", true),
@@ -43,6 +48,8 @@ impl Default for Config {
             alert_theme: "alert".into(),
             disks: vec!["/".into()],
             disk_alert_percent: 90.0,
+            alert_max_age_hours: 48.0,
+            log_error_ignore: Vec::new(),
             cache_max_age: 3600,
             modules: modules.iter().map(|(k, v)| (k.to_string(), *v)).collect(),
             weather_location: String::new(),
@@ -81,6 +88,15 @@ impl Config {
         }
         if let Some(v) = t.get("cache_max_age").and_then(Value::as_f64) {
             self.cache_max_age = v.max(0.0) as u64;
+        }
+        if let Some(v) = t.get("alert_max_age_hours").and_then(Value::as_f64) {
+            self.alert_max_age_hours = v.max(0.0);
+        }
+        if let Some(a) = t.get("log_error_ignore").and_then(Value::as_arr) {
+            self.log_error_ignore = a
+                .iter()
+                .filter_map(|v| v.as_str().map(String::from))
+                .collect();
         }
         if let Some(a) = t.get("disks").and_then(Value::as_arr) {
             self.disks = a

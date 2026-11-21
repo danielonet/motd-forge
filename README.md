@@ -40,7 +40,7 @@ Debian 11 is too old) and Ubuntu. How the banner reaches your login:
 
 - **Themes in plain TOML.** Swap the look with one config line, or write your own.
 - **Fast login.** Slow modules are collected by a systemd timer into a cache. Login only reads the cache and `/proc`, runs under a 2 s timeout (about 2 ms in practice), and never fails loudly.
-- **Alert mode.** A disk over the threshold, a failed systemd unit or a pending reboot switches the banner to the red `alert` theme, with a hint on what to run.
+- **Alert mode.** A disk over the threshold, a failed systemd unit, a recent error in the system journal or a pending reboot switches the banner to the red `alert` theme, with a hint on what to run. Errors age out: a journal error or failed unit older than 48 hours (`alert_max_age_hours`) is ignored and the banner goes back to the normal theme rotation. A full disk or a pending reboot is a current condition, so it keeps alerting until fixed.
 - **Seasonal themes.** Date ranges switch themes automatically (`frost` in December by default).
 - **Theme groups.** Set `theme_group = "movies"` to rotate daily through a group.
 - **Preview without logging out.** `motd-forge preview <theme>`, or `--demo` for sample data that includes alerts.
@@ -88,10 +88,13 @@ theme = "fortress"
 color = true
 disks = ["/"]
 disk_alert_percent = 90
+alert_max_age_hours = 48     # journal errors and failed units older than this do not alert
+log_error_ignore = []        # journal entries containing any of these strings are not errors
 
 [modules]
 updates = true
 failed_units = true
+log_errors = true
 last_login = true
 failed_ssh = true
 docker = true
@@ -104,7 +107,12 @@ from = "12-01"
 to = "12-31"
 ```
 
-Theme choice priority: alerts, then seasonal ranges, then `theme_group`, then `theme`.
+Theme choice priority: active alerts, then seasonal ranges, then `theme_group`, then `theme`. An error
+older than `alert_max_age_hours` is not an active alert, so it never blocks the normal rotation.
+
+The journal check runs in the background timer (`journalctl -p err`, newest entry), not at login, and
+needs the system journal; on a machine without journald it is simply skipped. Log text is cleaned of
+terminal control characters before it is shown.
 
 Files: all themes are built into the binary. Your own go in `~/.config/motd-forge/themes/` (or
 `/usr/share/motd-forge/themes/` system-wide) and override a built-in theme of the same name.

@@ -20,12 +20,13 @@ fn show(
     demo: bool,
     force_color: Option<bool>,
 ) -> Result<String, String> {
+    let now = sys::now_secs();
     let (live, cached) = if demo {
-        modules::demo()
+        modules::demo(now)
     } else {
         (modules::live(cfg), cache::read(cfg.cache_max_age))
     };
-    let (ctx, alerts) = render::build_context(&live, &cached, cfg);
+    let (ctx, alerts) = render::build_context(&live, &cached, cfg, now);
     let name = render::pick_theme(cfg, !alerts.is_empty(), sys::today(), theme_override);
     let theme = render::load_theme(&name)?;
     let mut out = render::render(&theme, &ctx);

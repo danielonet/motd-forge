@@ -99,6 +99,14 @@ impl Date {
     }
 }
 
+/// Seconds since the Unix epoch.
+pub fn now_secs() -> i64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_secs() as i64)
+        .unwrap_or(0)
+}
+
 /// Today's local date.
 pub fn today() -> Date {
     let secs = std::time::SystemTime::now()

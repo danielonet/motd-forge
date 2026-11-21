@@ -1,3 +1,13 @@
+motd-forge (0.3.0-1) unstable; urgency=medium
+
+  * Alert on recent errors in the system journal (journalctl -p err), shown
+    with their age and a hint.
+  * Errors and failed units older than 48 hours (alert_max_age_hours) no
+    longer raise an alert, so the banner returns to the normal theme rotation.
+  * Log text is stripped of terminal control characters before display.
+
+ -- motd-forge maintainers <noreply@example.com>  Sat, 21 Nov 2026 20:00:00 +0000
+
 motd-forge (0.2.1-1) unstable; urgency=medium
 
   * Fix the libc6 dependency: require glibc 2.34 (Debian 12+) instead of the
