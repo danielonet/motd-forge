@@ -12,7 +12,7 @@
 
 **motd-forge** builds the message of the day you see on SSH login or a console. It replaces the
 static `/etc/motd` with a themed, data-driven banner: a script in `/etc/update-motd.d/` that
-`pam_motd` runs at login on Debian and Ubuntu. Pure Python 3.11+, standard library only.
+`pam_motd` runs at login on Debian and Ubuntu. Written in Rust as one small self-contained binary: no runtime dependencies beyond libc, no third-party crates, and the themes are built in.
 
 ```
 ╭────────────────────────────────────╮
@@ -96,12 +96,13 @@ to = "12-31"
 
 Theme choice priority: alerts, then seasonal ranges, then `theme_group`, then `theme`.
 
-Files: themes in `/usr/share/motd-forge/themes/`, your own in `~/.config/motd-forge/themes/`,
-cache in `/var/cache/motd-forge/cache.json`.
+Files: all themes are built into the binary. Your own go in `~/.config/motd-forge/themes/` (or
+`/usr/share/motd-forge/themes/` system-wide) and override a built-in theme of the same name.
+The cache is `/var/cache/motd-forge/cache.txt`.
 
 ## Write a theme
 
-A theme is a TOML file. Either a free `template` (Python `str.format` placeholders; a line
+A theme is a TOML file. Either a free `template` (`{name}` placeholders, `{{` and `}}` for literal braces; a line
 whose placeholders are all empty is dropped):
 
 ```toml
@@ -142,18 +143,20 @@ sudo apt update && sudo apt install motd-forge
 Or install the `.deb` directly (no automatic updates):
 
 ```
-curl -fsSLO https://github.com/danielonet/motd-forge/releases/latest/download/motd-forge_all.deb
-sudo apt install ./motd-forge_all.deb
+arch=$(dpkg --print-architecture)
+curl -fsSLO "https://github.com/danielonet/motd-forge/releases/latest/download/motd-forge_${arch}.deb"
+sudo apt install "./motd-forge_${arch}.deb"
 ```
 
 From source:
 
 ```
-dpkg-buildpackage -us -uc -b         # build the .deb
-sudo apt install ../motd-forge_*.deb
+cargo build --release                # target/release/motd-forge
+cargo run -- preview neon --demo     # try a theme
+cargo fmt --check && cargo clippy --all-targets -- -D warnings && cargo test
 
-pip install -e . pytest && pytest    # develop
-PYTHONPATH=src python3 -m motd_forge preview neon --demo
+dpkg-buildpackage -us -uc -b         # build the .deb (needs debhelper, cargo, rustc)
+sudo apt install ../motd-forge_*.deb
 ```
 
 ## License
