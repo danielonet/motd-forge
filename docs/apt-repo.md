@@ -41,7 +41,9 @@ Later releases arrive through `apt upgrade`. Older versions stay in the reposito
 
 ## Notes
 
-- CI builds on Debian 13 for amd64. The binary needs only libc, so there is nothing else to install.
+- CI builds on Debian 13 for amd64. The binary needs only libc (glibc 2.34 or newer, so Debian 12 and
+  13 work, Debian 11 does not), so there is nothing else to install. The package also installs
+  `/etc/profile.d/motd-forge.sh`, which is what shows the banner on Debian (see the README).
   Other architectures need a matching runner (for example `ubuntu-24.04-arm` for arm64).
 - Local test of the script: `scripts/build-apt-repo.sh SITE_DIR DEB_DIR` with a throwaway GPG key.
 - Each release also carries a stable-name copy, `motd-forge_<arch>.deb`, so

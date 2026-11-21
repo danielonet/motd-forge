@@ -15,6 +15,7 @@ override_dh_auto_test:
 override_dh_auto_install:
 	install -D -m755 target/release/motd-forge debian/motd-forge/usr/bin/motd-forge
 	install -D -m755 packaging/50-motd-forge debian/motd-forge/etc/update-motd.d/50-motd-forge
+	install -D -m644 packaging/motd-forge.sh debian/motd-forge/etc/profile.d/motd-forge.sh
 	install -D -m644 packaging/config.toml debian/motd-forge/etc/motd-forge/config.toml
 
 override_dh_installsystemd:

@@ -1,3 +1,6 @@
 #!/bin/sh
-# Installed to /etc/update-motd.d/. Reads cache only; must never block login.
+# Installed to /etc/update-motd.d/. Used where pam_motd runs that directory (Ubuntu).
+# Debian does not do this by default; /etc/profile.d/motd-forge.sh covers it there.
+# Reads cache only; must never block login.
+touch /run/motd-forge.stamp 2>/dev/null || true
 exec timeout 2 /usr/bin/motd-forge show 2>/dev/null || true

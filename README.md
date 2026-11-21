@@ -10,9 +10,19 @@
    ╰────────────────────────────────────────────────╯
 ```
 
-**motd-forge** builds the message of the day you see on SSH login or a console. It replaces the
-static `/etc/motd` with a themed, data-driven banner: a script in `/etc/update-motd.d/` that
-`pam_motd` runs at login on Debian and Ubuntu. Written in Rust as one small self-contained binary: no runtime dependencies beyond libc, no third-party crates, and the themes are built in.
+**motd-forge** builds the message of the day you see on SSH login or a console, as a themed,
+data-driven banner. Written in Rust as one small self-contained binary: no runtime dependencies
+beyond libc, no third-party crates, and the themes are built in.
+
+**Runs on Debian 12 and 13** (any release with glibc 2.34 or newer, amd64 builds are published;
+Debian 11 is too old) and on Ubuntu. How the banner reaches your login:
+
+- **Debian:** `/etc/profile.d/motd-forge.sh` prints it at interactive login (SSH or console).
+  Debian's `pam_motd` does not run `/etc/update-motd.d`, so a script there would never show up.
+- **Ubuntu:** `/etc/update-motd.d/50-motd-forge` is run by `pam_motd`; the profile hook notices
+  this and stays quiet so the banner is not printed twice.
+- Opt out with `export MOTD_FORGE_DISABLE=1` in your shell profile, or delete the profile.d file.
+  Debian's own legal text from `/etc/motd` is still printed first.
 
 ```
 ╭────────────────────────────────────╮
@@ -29,7 +39,7 @@ static `/etc/motd` with a themed, data-driven banner: a script in `/etc/update-m
 ## The good stuff
 
 - **Themes in plain TOML.** Swap the look with one config line, or write your own.
-- **Fast login.** Slow modules are collected by a systemd timer into a cache. Login only reads the cache and `/proc`, runs under a 2 s timeout, and never fails loudly.
+- **Fast login.** Slow modules are collected by a systemd timer into a cache. Login only reads the cache and `/proc`, runs under a 2 s timeout (about 2 ms in practice), and never fails loudly.
 - **Alert mode.** A disk over the threshold, a failed systemd unit or a pending reboot switches the banner to the red `alert` theme, with a hint on what to run.
 - **Seasonal themes.** Date ranges switch themes automatically (`frost` in December by default).
 - **Theme groups.** Set `theme_group = "movies"` to rotate daily through a group.
