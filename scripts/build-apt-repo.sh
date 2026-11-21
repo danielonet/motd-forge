@@ -32,7 +32,7 @@ hashes() {
     echo "Label: motd-forge"
     echo "Suite: stable"
     echo "Codename: stable"
-    echo "Architectures: all"
+    echo "Architectures: $(sed -n 's/^Architecture: //p' Packages | sort -u | tr '\n' ' ' | sed 's/ $//')"
     echo "Date: $(date -Ru)"
     echo "Description: motd-forge apt repository"
     echo "SHA256:"

@@ -1,0 +1,18 @@
+[package]
+name = "motd-forge"
+version = "0.2.0"
+edition = "2021"
+rust-version = "1.77"
+description = "Themed, data-driven message of the day for Debian"
+license = "MIT"
+build = "build.rs"
+
+# No third-party crates on purpose: one static-ish binary, only libc at runtime.
+[dependencies]
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

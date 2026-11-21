@@ -1,3 +1,12 @@
+motd-forge (0.2.0-1) unstable; urgency=medium
+
+  * Rewrite in Rust: a single self-contained binary, no Python, no
+    third-party crates. Themes are built in; custom themes still load from
+    ~/.config/motd-forge/themes and /usr/share/motd-forge/themes.
+  * Architecture is now "any" (published for amd64).
+
+ -- motd-forge maintainers <noreply@example.com>  Sat, 21 Nov 2026 12:00:00 +0000
+
 motd-forge (0.1.0-1) unstable; urgency=medium
 
   * Initial release.

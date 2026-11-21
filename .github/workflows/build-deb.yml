@@ -10,8 +10,8 @@ jobs:
   version:
     # Decides whether this run publishes a release. A release is published when
     #  - a v* tag is pushed, or
-    #  - a push to main finds no GitHub release for the version in pyproject.toml.
-    # So releasing = bump the version (pyproject.toml + debian/changelog) and merge.
+    #  - a push to main finds no GitHub release for the version in Cargo.toml.
+    # So releasing = bump the version (Cargo.toml + debian/changelog) and merge.
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.v.outputs.version }}
@@ -22,7 +22,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          ver=$(sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml | head -n1)
+          ver=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n1)
           release=false
           if [ "$GITHUB_REF_TYPE" = tag ]; then
             ver=${GITHUB_REF_NAME#v}; release=true
@@ -36,25 +36,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.12" }
-      - run: pip install pytest && pip install -e . && pytest
+      - run: cargo fmt --check
+      - run: cargo clippy --locked --all-targets -- -D warnings
+      - run: cargo test --locked
   deb:
     needs: [test, version]
     runs-on: ubuntu-latest
     container: debian:trixie
     steps:
-      - run: apt-get update && apt-get install -y git build-essential devscripts debhelper dh-python pybuild-plugin-pyproject python3-all python3-setuptools
+      - run: apt-get update && apt-get install -y git build-essential devscripts debhelper cargo rustc
       - uses: actions/checkout@v4
       - run: dpkg-buildpackage -us -uc -b
       - run: mkdir out && cp ../*.deb out/
       - uses: actions/upload-artifact@v4
         with: { name: deb, path: out/*.deb }
-      - name: Add a stable-name copy for releases/latest/download/motd-forge_all.deb
+      - name: Add a stable-name copy for releases/latest/download/motd-forge_<arch>.deb
         if: needs.version.outputs.release == 'true'
         run: |
           mkdir release && cp out/*.deb release/
-          cp out/*.deb release/motd-forge_all.deb
+          cp out/*.deb "release/motd-forge_$(dpkg --print-architecture).deb"
       - if: needs.version.outputs.release == 'true'
         uses: softprops/action-gh-release@v2
         with:

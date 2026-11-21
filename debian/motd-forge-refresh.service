@@ -3,5 +3,7 @@ Description=Refresh motd-forge cache (slow modules)
 
 [Service]
 Type=oneshot
+CacheDirectory=motd-forge
+CacheDirectoryMode=0755
 ExecStart=/usr/bin/motd-forge refresh
 Nice=10

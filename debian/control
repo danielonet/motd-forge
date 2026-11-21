@@ -2,14 +2,16 @@ Source: motd-forge
 Section: admin
 Priority: optional
 Maintainer: motd-forge maintainers <noreply@example.com>
-Build-Depends: debhelper-compat (= 13), dh-python, python3-all, python3-setuptools, pybuild-plugin-pyproject
+Build-Depends: debhelper-compat (= 13), cargo, rustc (>= 1.77)
 Standards-Version: 4.6.2
 Rules-Requires-Root: no
 
 Package: motd-forge
-Architecture: all
-Depends: ${python3:Depends}, ${misc:Depends}, python3 (>= 3.11)
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: libpam-modules
 Description: themed, data-driven message of the day
  Builds the login banner from /etc/update-motd.d with swappable themes,
  alert mode and cached slow modules (updates, failed units, weather).
+ A single self-contained binary with no dependencies beyond libc; all
+ themes are built in.

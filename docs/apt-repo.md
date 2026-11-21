@@ -2,7 +2,7 @@
 
 ## Releasing
 
-A release is created automatically. Bump `version` in `pyproject.toml` and the top entry of
+A release is created automatically. Bump `version` in `Cargo.toml` (and refresh `Cargo.lock` with `cargo build`) and the top entry of
 `debian/changelog` (e.g. `0.1.1` and `0.1.1-1`) and merge to `main`: if there is no GitHub release
 for that version yet, CI creates the tag `v<version>`, attaches the `.deb`, and updates the apt
 repository. Pushing a `v*` tag by hand works too.
@@ -41,8 +41,11 @@ Later releases arrive through `apt upgrade`. Older versions stay in the reposito
 
 ## Notes
 
-- Built on Debian 13; the package needs Python 3.11 or newer.
+- CI builds on Debian 13 for amd64. The binary needs only libc (glibc 2.34 or newer, so Debian 12 and
+  13 work, Debian 11 does not), so there is nothing else to install. The package also installs
+  `/etc/profile.d/motd-forge.sh`, which is what shows the banner on Debian (see the README).
+  Other architectures need a matching runner (for example `ubuntu-24.04-arm` for arm64).
 - Local test of the script: `scripts/build-apt-repo.sh SITE_DIR DEB_DIR` with a throwaway GPG key.
-- Each release also carries a stable-name copy, `motd-forge_all.deb`, so
-  `https://github.com/danielonet/motd-forge/releases/latest/download/motd-forge_all.deb` always
+- Each release also carries a stable-name copy, `motd-forge_<arch>.deb`, so
+  `https://github.com/danielonet/motd-forge/releases/latest/download/motd-forge_amd64.deb` always
   works. The apt repository only gets the versioned file.
